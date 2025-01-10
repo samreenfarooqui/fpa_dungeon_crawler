@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "471066656221",
+    "project_id": "dungeoncrawlerfpa",
+    "storage_bucket": "dungeoncrawlerfpa.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:471066656221:android:6b7c48df673b94e6f48a34",
+        "android_client_info": {
+          "package_name": "com.example.cs2340c_team38"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBs_1cSnTmTNR-S8s9EpsHdh3wwGHhBJMs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

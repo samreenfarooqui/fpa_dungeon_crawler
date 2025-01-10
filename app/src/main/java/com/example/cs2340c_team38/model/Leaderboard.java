@@ -4,17 +4,13 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class Leaderboard {
     private static volatile Leaderboard leaderboard;
-
-    private static ScoreEntry recent;
-
-    public void clearAll() {
-        scores.clear();
-    }
-
-    private List<ScoreEntry> scores;
+    private final List<ScoreEntry> scores;
+    private volatile ScoreEntry recent;
 
     private Leaderboard() {
         this.scores = new CopyOnWriteArrayList<>();
@@ -32,9 +28,12 @@ public class Leaderboard {
     }
 
     public void addScore(String playerName, int score) {
-        scores.add(new ScoreEntry(playerName, score));
-        recent = new ScoreEntry(playerName, score);
-        Collections.sort(scores, (a, b) -> b.score - a.score); // Sort in descending order by score
+        ScoreEntry newEntry = new ScoreEntry(playerName, score);
+        scores.add(newEntry);
+        recent = newEntry;
+
+        // Sort in descending order by score
+        Collections.sort(scores, (a, b) -> b.getScore() - a.getScore());
     }
 
     public List<ScoreEntry> getTopScores(int limit) {
@@ -42,14 +41,34 @@ public class Leaderboard {
     }
 
     public ScoreEntry getMostRecent() {
-        if (scores.isEmpty()) {
-            return null;
-        }
         return recent;
+    }
+
+    public void clearAll() {
+        scores.clear();
     }
 
     public static class ScoreEntry {
         private String playerName;
+        private int score;
+        private Date dateTime;
+
+        // Constructor
+        public ScoreEntry(String playerName, int score) {
+            this.playerName = playerName;
+            this.score = score;
+            this.dateTime = new Date();
+            addToDatabase();
+        }
+
+        // Getters and setters
+        public String getPlayerName() {
+            return playerName;
+        }
+
+        public void setPlayerName(String playerName) {
+            this.playerName = playerName;
+        }
 
         public int getScore() {
             return score;
@@ -59,28 +78,22 @@ public class Leaderboard {
             this.score = score;
         }
 
-        private int score;
-
         public Date getDateTime() {
             return dateTime;
         }
 
-        private Date dateTime;
-
-        public ScoreEntry(String playerName, int score) {
-            this.playerName = playerName;
-            this.score = score;
-            this.dateTime = new Date();
+        public void setDateTime(Date dateTime) {
+            this.dateTime = dateTime;
         }
 
-        public String getPlayerName() {
-            return playerName;
-        }
+        // Add the score entry to Firebase Realtime Database
+        private void addToDatabase() {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference leaderboardRef = database.getReference("leaderboard");
 
-        public void setPlayerName(String playerName) {
-            this.playerName = playerName;
+            leaderboardRef.push().setValue(this)
+                    .addOnSuccessListener(aVoid -> System.out.println("Score added successfully!"))
+                    .addOnFailureListener(e -> System.err.println("Failed to add score: " + e.getMessage()));
         }
     }
-
-
 }
