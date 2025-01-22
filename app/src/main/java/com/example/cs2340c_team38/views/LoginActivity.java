@@ -34,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText editTextEmail;
     private EditText editTextPassword;
     private Button buttonLogin;
+    private Button buttonRegister;
     private TextView textViewSignUp;
 
     @Override
@@ -43,11 +44,16 @@ public class LoginActivity extends AppCompatActivity {
 
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance();
-
+        if (auth.getCurrentUser() != null) {
+            // User is already logged in, navigate to MainActivity
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finish(); // Close the LoginActivity
+        }
         // Initialize UI elements
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
         buttonLogin = findViewById(R.id.buttonLogin);
+        buttonRegister = findViewById(R.id.buttonRegister);
 
         // Set click listener for the login button
         buttonLogin.setOnClickListener(new View.OnClickListener() {
@@ -56,6 +62,16 @@ public class LoginActivity extends AppCompatActivity {
                 loginUser();
             }
         });
+
+        // Set listener for the register button so it redirects to the register activity
+        buttonRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+            }
+        });
+
+
     }
 
     private void loginUser() {

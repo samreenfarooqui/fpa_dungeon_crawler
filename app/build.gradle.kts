@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.example.cs2340c_team38"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.cs2340c_team38"
