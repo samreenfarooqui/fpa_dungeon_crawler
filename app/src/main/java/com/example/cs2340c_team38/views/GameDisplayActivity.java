@@ -23,6 +23,7 @@ import com.example.cs2340c_team38.model.Player;
 import com.example.cs2340c_team38.model.PlayerDecorator;
 import com.example.cs2340c_team38.model.TileType;
 import com.example.cs2340c_team38.viewmodels.GameDisplayViewModel;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import android.os.Handler;
 import android.util.Log;
@@ -36,6 +37,7 @@ import android.widget.Toast;
 public class GameDisplayActivity extends AppCompatActivity implements Observer {
 
     private GameDisplayViewModel viewModel;
+    private FirebaseAnalytics firebaseAnalytics;
     private String playerName;
     private int difficulty;
     private int characterSpriteId;
@@ -169,6 +171,7 @@ public class GameDisplayActivity extends AppCompatActivity implements Observer {
             startActivity(intent);
         });
 
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         // Movements
 
@@ -227,29 +230,37 @@ public class GameDisplayActivity extends AppCompatActivity implements Observer {
 
         Button upButton = findViewById(R.id.upButton);
         upButton.setOnClickListener(v -> {
-
+            logMovementEvent("up");
             player.setMoveStrategy(new MoveUp());
             player.move(tileMap);
         });
 
         Button downButton = findViewById(R.id.downButton);
         downButton.setOnClickListener(v -> {
+            logMovementEvent("down");
             player.setMoveStrategy(new MoveDown());
             player.move(tileMap);
         });
 
         Button leftButton = findViewById(R.id.leftButton);
         leftButton.setOnClickListener(v -> {
+            logMovementEvent("left");
             player.setMoveStrategy(new MoveLeft());
             player.move(tileMap);
         });
 
         Button rightButton = findViewById(R.id.rightButton);
         rightButton.setOnClickListener(v -> {
+            logMovementEvent("right");
             player.setMoveStrategy(new MoveRight());
             player.move(tileMap);
         });
 
+    }
+
+    private void logMovementEvent(String direction) {
+        Bundle bundle = new Bundle();
+        firebaseAnalytics.logEvent(direction, bundle);
     }
 
     public void update(Observable o, String type, int x, int y) {
