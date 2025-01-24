@@ -31,7 +31,7 @@ import com.example.cs2340c_team38.model.Player;
 import com.example.cs2340c_team38.model.PlayerDecorator;
 import com.example.cs2340c_team38.model.TileType;
 import com.example.cs2340c_team38.viewmodels.GameDisplayViewModel2;
-
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 public class GameDisplayActivity2 extends AppCompatActivity implements Observer {
 
@@ -102,6 +102,8 @@ public class GameDisplayActivity2 extends AppCompatActivity implements Observer 
     private int[] currScore2;
     private Enemy slime1;
     private Enemy slime2;
+
+    private FirebaseAnalytics firebaseAnalytics;
 
     private Handler enemyMoveHandler = new Handler();
     private Runnable enemyMoveRunnable;
@@ -179,9 +181,9 @@ public class GameDisplayActivity2 extends AppCompatActivity implements Observer 
             moveViewToPosition(findViewById(R.id.powerUp), powerUpY, powerUpX);
         }
 
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
         // Attacks
-
-
 
         int startY = 18;
         int startX = 5;
@@ -222,27 +224,36 @@ public class GameDisplayActivity2 extends AppCompatActivity implements Observer 
 
         Button upButton = findViewById(R.id.upButton);
         upButton.setOnClickListener(v -> {
+            logMovementEvent("up");
             player.setMoveStrategy(new MoveUp());
             player.move(tileMap);
         });
 
         Button downButton = findViewById(R.id.downButton);
         downButton.setOnClickListener(v -> {
+            logMovementEvent("down");
             player.setMoveStrategy(new MoveDown());
             player.move(tileMap);
         });
 
         Button leftButton = findViewById(R.id.leftButton);
         leftButton.setOnClickListener(v -> {
+            logMovementEvent("left");
             player.setMoveStrategy(new MoveLeft());
             player.move(tileMap);
         });
 
         Button rightButton = findViewById(R.id.rightButton);
         rightButton.setOnClickListener(v -> {
+            logMovementEvent("right");
             player.setMoveStrategy(new MoveRight());
             player.move(tileMap);
         });
+    }
+
+    private void logMovementEvent(String direction) {
+        Bundle bundle = new Bundle();
+        firebaseAnalytics.logEvent(direction, bundle);
     }
 
     @Override
