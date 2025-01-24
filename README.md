@@ -6,9 +6,3 @@ Samreen Farooqui
 
 Uzma Khan 
 
-![](abcgif.gif)
-
-[![Demo CountPages alpha](https://i.imgur.com/W45VGmW.gif)](https://i.imgur.com/W45VGmW.gif)
-![gif](https://i.imgur.com/W45VGmW.gif)
-
-![](https://i.imgur.com/W45VGmW.gif)
